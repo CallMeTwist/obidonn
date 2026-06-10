@@ -1,7 +1,7 @@
 import { Building2, Target, Award, Users } from "lucide-react";
 import { Reveal } from "@/components/motion/Reveal";
 import { Eyebrow } from "@/components/brand/Eyebrow";
-import ceoImage from "@/assets/ceo-portrait.jpg";
+import ceoImage from "@/assets/ceo-portrait.jpeg";
 
 const About = () => (
   <div>
@@ -21,7 +21,7 @@ const About = () => (
         <div>
           <h2 className="font-heading text-3xl md:text-4xl font-semibold text-foreground">Our Story</h2>
           <p className="mt-4 text-muted-foreground leading-relaxed">
-            Founded by Donn Okonkwo, DONNS was built on a simple conviction: exceptional spaces begin long before the first brick is laid. Over 18 years we have evolved into a fully integrated design, supply, and build firm — guiding clients from initial concept through architectural design, curated material specification, and on-site delivery.
+            Founded by High Chief Obinna Anieke, DONNS was built on a simple conviction: exceptional spaces begin long before the first brick is laid. Over 18 years we have evolved into a fully integrated design, supply, and build firm — guiding clients from initial concept through architectural design, curated material specification, and on-site delivery.
           </p>
           <p className="mt-4 text-muted-foreground leading-relaxed">
             Our portfolio spans residential, commercial, and hospitality projects across Nigeria. Whether you are commissioning a bespoke interior or sourcing premium finishing materials, every DONNS engagement is shaped by the same standard: precision, craft, and uncompromising quality.
@@ -71,7 +71,7 @@ const About = () => (
             <div className="text-left">
               <div className="mb-4">
                 <p className="eyebrow text-gold">Chief Executive Officer</p>
-                <h3 className="font-heading text-3xl font-semibold text-foreground mt-2">Donn Okonkwo</h3>
+                <h3 className="font-heading text-3xl font-semibold text-foreground mt-2">High Chief Obinna Anieke</h3>
               </div>
               <p className="text-muted-foreground leading-relaxed mb-4">
                 With over 18 years of experience in the building materials and design industry, Donn founded DONNS on a mission to deliver gold-standard materials and bespoke design services. His commitment to excellence and customer satisfaction has shaped every aspect of the business.
