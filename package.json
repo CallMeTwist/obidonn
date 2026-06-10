@@ -1,0 +1,14 @@
+{
+  "name": "Obidonn",
+  "private": true,
+  "scripts": {
+    "dev:api":     "cd apps/api/obidonn-backend && php artisan serve",
+    "dev:web":     "cd \"apps/web/buildsmart-commerce-main\" && npx vite",
+    "dev":         "concurrently \"npm run dev:api\" \"npm run dev:web\"",
+    "build:web":   "cd \"apps/web/buildsmart-commerce-main\" && npx vite build",
+    "install:web": "cd \"apps/web/buildsmart-commerce-main\" && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

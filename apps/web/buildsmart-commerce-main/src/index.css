@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* LIGHT LUXURY — default (shop, checkout, contact) */
+  :root {
+    --background: 40 33% 96%;        /* cream #F7F3EC */
+    --foreground: 40 11% 9%;         /* ink  #1A1813 */
+
+    --card: 0 0% 100%;
+    --card-foreground: 40 11% 9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 40 11% 9%;
+
+    --primary: 40 11% 9%;            /* ink buttons */
+    --primary-foreground: 40 33% 96%;
+
+    --secondary: 40 14% 90%;
+    --secondary-foreground: 40 11% 9%;
+
+    --muted: 40 14% 92%;
+    --muted-foreground: 40 6% 40%;
+
+    --accent: 43 57% 50%;            /* gold #CBA135 */
+    --accent-foreground: 40 11% 9%;
+
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 40 14% 86%;
+    --input: 40 14% 86%;
+    --ring: 43 57% 50%;
+
+    --radius: 0.5rem;
+
+    --gold: 43 57% 50%;              /* #CBA135 */
+    --gold-light: 44 68% 70%;        /* #E7CC7B */
+
+    --font-heading: 'Cormorant Garamond', serif;
+    --font-body: 'Inter', sans-serif;
+
+    --gradient-gold: linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)));
+    --shadow-card: 0 2px 14px hsl(40 11% 9% / 0.06);
+    --shadow-card-hover: 0 14px 40px hsl(40 11% 9% / 0.12);
+
+    --sidebar-background: 252 9% 9%;
+    --sidebar-foreground: 43 25% 89%;
+    --sidebar-primary: 41 43% 56%;
+    --sidebar-primary-foreground: 240 7% 5%;
+    --sidebar-accent: 252 9% 16%;
+    --sidebar-accent-foreground: 43 25% 89%;
+    --sidebar-border: 252 9% 16%;
+    --sidebar-ring: 41 43% 56%;
+  }
+
+  /* DARK LUXURY — landing, services, footer (apply class on a wrapper) */
+  .theme-dark {
+    --background: 240 7% 5%;         /* #0B0B0D */
+    --foreground: 43 25% 89%;        /* #ECE6D8 */
+
+    --card: 252 9% 9%;               /* #15141A */
+    --card-foreground: 43 25% 89%;
+
+    --popover: 252 9% 9%;
+    --popover-foreground: 43 25% 89%;
+
+    --primary: 43 57% 50%;           /* gold primary on dark */
+    --primary-foreground: 40 11% 9%;
+
+    --secondary: 252 8% 16%;
+    --secondary-foreground: 43 25% 89%;
+
+    --muted: 252 8% 14%;
+    --muted-foreground: 40 6% 62%;
+
+    --accent: 43 57% 50%;
+    --accent-foreground: 40 11% 9%;
+
+    --border: 252 9% 16%;
+    --input: 252 9% 16%;
+    --ring: 43 57% 50%;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+  h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); }
+}
+
+@layer components {
+  .btn-gold {
+    background: var(--gradient-gold);
+    color: hsl(40 11% 9%);
+  }
+  .card-shadow { box-shadow: var(--shadow-card); }
+  .card-shadow-hover { box-shadow: var(--shadow-card-hover); }
+}
+
+@layer utilities {
+  .gradient-gold { background: var(--gradient-gold); }
+  .eyebrow {
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: hsl(var(--gold));
+  }
+  .text-gold { color: hsl(var(--gold)); }
+  .text-gold-light { color: hsl(var(--gold-light)); }
+}

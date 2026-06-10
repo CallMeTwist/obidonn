@@ -1,0 +1,27 @@
+# dependencies
+node_modules/
+**/node_modules/
+vendor/
+**/vendor/
+
+# build output
+dist/
+**/dist/
+apps/api/obidonn-backend/public/build/
+
+# env
+.env
+**/.env
+*.local
+
+# laravel runtime
+apps/api/obidonn-backend/storage/logs/
+apps/api/obidonn-backend/storage/framework/cache/
+apps/api/obidonn-backend/storage/framework/sessions/
+apps/api/obidonn-backend/storage/framework/views/
+apps/api/obidonn-backend/bootstrap/cache/
+
+# brainstorm companion + os
+.superpowers/
+.DS_Store
+Thumbs.db
