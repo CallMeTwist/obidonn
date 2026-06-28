@@ -150,7 +150,9 @@ map + label accessor, and constants (`PAYMENT_UNPAID`, `PAYMENT_PAID`, `PAYMENT_
 - Add a `payment_status` badge column (unpaid=warning, paid=success, expired=gray) and a
   `SelectFilter` on `payment_status` including an explicit "Expired" option.
 - Add **"Mark as Paid"** as a row action and a bulk action: sets `payment_status = paid`, stamps
-  `paid_at = now()`, nulls `expires_at`, and bumps fulfillment `status` to `confirmed`.
+  `paid_at = now()`, nulls `expires_at`, and bumps fulfillment `status` to `confirmed` **only if it
+  is currently `pending`** (so an order already further along — processing, out for delivery — is
+  not rewound).
 - Infolist/view page: surface payment status, `paid_at`, and `expires_at`.
 
 **Scheduler requirement (documented):** the two new commands (`orders:expire-unpaid` and
@@ -173,8 +175,23 @@ Recipient is an on-demand notifiable routed to `config('business.admin_email')` 
 - `OrderExpiringSoonNotification`: sent by a new command `orders:remind-unpaid` for `unpaid`
   orders whose `expires_at` is within the next 24h and `reminded_at is null`; sets `reminded_at`
   to avoid duplicates. Scheduled hourly.
-- **Mail config:** needs `MAIL_*` in `.env` (Gmail SMTP or a provider). Without it, dev uses the
-  `log` mailer and the **Filament bell channel still delivers** (no SMTP needed).
+- **Mail config:** standard `MAIL_*` vars; recommended setup is **Gmail SMTP with an App
+  Password** for `donnsproperties@gmail.com` (a normal Gmail password will not work for SMTP).
+  Example `.env`:
+  ```env
+  MAIL_MAILER=smtp
+  MAIL_HOST=smtp.gmail.com
+  MAIL_PORT=587
+  MAIL_USERNAME=donnsproperties@gmail.com
+  MAIL_PASSWORD="<16-char Google App Password>"
+  MAIL_ENCRYPTION=tls
+  MAIL_FROM_ADDRESS=donnsproperties@gmail.com
+  MAIL_FROM_NAME="DONNS"
+  ADMIN_EMAIL=donnsproperties@gmail.com
+  ```
+  Reading from `MAIL_*` means swapping to Resend/Mailgun later needs no code change. Without any
+  SMTP configured, dev uses the `log` mailer and the **Filament bell channel still delivers** — so
+  the admin is never fully blind.
 
 `routes/console.php` schedules two new hourly jobs: `orders:expire-unpaid` and
 `orders:remind-unpaid`.
