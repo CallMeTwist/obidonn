@@ -1,13 +1,9 @@
 import { useState } from "react";
-import { Phone, Mail, MapPin, Send, MessageCircle } from "lucide-react";
+import { Phone, Mail, MapPin, Send, MessageCircle, Instagram } from "lucide-react";
+import { BUSINESS, waLink } from "@/config/business";
 import { Button } from "@/components/ui/button";
 import { Eyebrow } from "@/components/brand/Eyebrow";
 import { toast } from "@/hooks/use-toast";
-
-const BUSINESS_EMAIL    = "hello@donns.com";
-const BUSINESS_WHATSAPP = "2348000000000";
-const BUSINESS_PHONE    = "+234 800 000 0000";
-const BUSINESS_ADDRESS  = "Lagos, Nigeria";
 
 const Contact = () => {
   const [form, setForm] = useState({
@@ -25,7 +21,7 @@ const Contact = () => {
     const body    = encodeURIComponent(
       `Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
     );
-    window.location.href = `mailto:${BUSINESS_EMAIL}?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${BUSINESS.email}?subject=${subject}&body=${body}`;
     toast({ title: "Email client opened!", description: "Your message has been pre-filled. Just hit Send." });
     setForm({ name: "", email: "", subject: "", message: "" });
     setSending(false);
@@ -36,10 +32,13 @@ const Contact = () => {
       toast({ title: "Fill in your name and message first", variant: "destructive" });
       return;
     }
-    const text = encodeURIComponent(
-      `Hello, I'm ${form.name}.\n\n*Subject:* ${form.subject || "General Enquiry"}\n\n${form.message}\n\nReply to: ${form.email}`
+    window.open(
+      waLink(
+        `Hello, I'm ${form.name}.\n\n*Subject:* ${form.subject || "General Enquiry"}\n\n${form.message}\n\nReply to: ${form.email}`,
+      ),
+      "_blank",
+      "noopener,noreferrer",
     );
-    window.open(`https://wa.me/${BUSINESS_WHATSAPP}?text=${text}`, "_blank");
   };
 
   const inputClass = "w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold";
@@ -67,8 +66,12 @@ const Contact = () => {
               </div>
               <div>
                 <h3 className="font-heading text-sm font-semibold text-foreground">Phone / WhatsApp</h3>
-                <p className="text-sm text-foreground">{BUSINESS_PHONE}</p>
-                <p className="text-xs text-muted-foreground">Mon–Sat 8am–6pm</p>
+                {BUSINESS.phones.map((p, i) => (
+                  <p key={p} className="text-sm text-foreground">
+                    {p}{i === 0 ? " (WhatsApp)" : ""}
+                  </p>
+                ))}
+                <p className="text-xs text-muted-foreground">{BUSINESS.hours}</p>
               </div>
             </div>
 
@@ -79,7 +82,7 @@ const Contact = () => {
               </div>
               <div>
                 <h3 className="font-heading text-sm font-semibold text-foreground">Email</h3>
-                <p className="text-sm text-foreground">{BUSINESS_EMAIL}</p>
+                <p className="text-sm text-foreground">{BUSINESS.email}</p>
                 <p className="text-xs text-muted-foreground">We reply within 24 hours</p>
               </div>
             </div>
@@ -91,18 +94,30 @@ const Contact = () => {
               </div>
               <div>
                 <h3 className="font-heading text-sm font-semibold text-foreground">Address</h3>
-                <p className="text-sm text-foreground">{BUSINESS_ADDRESS}</p>
+                {BUSINESS.addresses.map((a) => (
+                  <p key={a} className="text-sm text-foreground">{a}</p>
+                ))}
                 <p className="text-xs text-muted-foreground">Visit us in person</p>
               </div>
             </div>
 
           </div>
 
+          <a
+            href={BUSINESS.socials.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-flex items-center gap-2 text-sm text-foreground transition-colors hover:text-gold"
+          >
+            <span className={iconBox}><Instagram className="h-5 w-5" /></span>
+            Follow us on Instagram
+          </a>
+
           {/* Map */}
           <div className="mt-8 overflow-hidden rounded-lg border border-border">
             <iframe
               title="Store Location"
-              src={`https://maps.google.com/maps?q=${encodeURIComponent(BUSINESS_ADDRESS)}&output=embed`}
+              src={`https://maps.google.com/maps?q=${encodeURIComponent(BUSINESS.mapAddress)}&output=embed`}
               width="100%"
               height="220"
               style={{ border: 0 }}
