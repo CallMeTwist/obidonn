@@ -5,6 +5,7 @@ import { z } from "zod";
 import { submitConsultation, type ServiceType } from "@/api/consultations";
 import { GoldButton } from "@/components/brand/GoldButton";
 import { useToast } from "@/hooks/use-toast";
+import { waLink } from "@/config/business";
 
 const schema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -26,6 +27,7 @@ export function BookingForm({ serviceType }: { serviceType: ServiceType }) {
     register,
     handleSubmit,
     reset,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({ resolver: zodResolver(schema) });
 
@@ -45,6 +47,16 @@ export function BookingForm({ serviceType }: { serviceType: ServiceType }) {
     } catch {
       toast({ title: "Something went wrong", description: "Please try again.", variant: "destructive" });
     }
+  };
+
+  const handleWhatsApp = () => {
+    const v = getValues();
+    if (!v.name || !v.message) {
+      toast({ title: "Add your name and a short message first", variant: "destructive" });
+      return;
+    }
+    const text = `Hello, I'd like to book a *${serviceType}* consultation.\n\nName: ${v.name}\nEmail: ${v.email || "—"}\nPhone: ${v.phone || "—"}\nProject: ${v.project_type || "—"}\n\n${v.message}`;
+    window.open(waLink(text), "_blank", "noopener,noreferrer");
   };
 
   if (done) {
@@ -87,9 +99,21 @@ export function BookingForm({ serviceType }: { serviceType: ServiceType }) {
         {errors.message && <p className="mt-1 text-xs text-destructive">{errors.message.message}</p>}
       </div>
 
-      <GoldButton type="submit" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">
-        {isSubmitting ? "Sending…" : "Request a Consultation"}
-      </GoldButton>
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <GoldButton type="submit" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">
+          {isSubmitting ? "Sending…" : "Request a Consultation"}
+        </GoldButton>
+        <button
+          type="button"
+          onClick={handleWhatsApp}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-green-500 px-6 py-3 text-sm font-semibold text-green-500 transition-colors hover:bg-green-500/10 sm:w-auto"
+        >
+          Book on WhatsApp
+        </button>
+      </div>
+      <p className="text-xs text-muted-foreground">
+        Submit to reach the team by email, or continue the conversation instantly on WhatsApp.
+      </p>
     </form>
   );
 }

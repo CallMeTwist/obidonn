@@ -34,4 +34,19 @@ describe("BookingForm", () => {
     expect(await screen.findByText(/name is required/i)).toBeInTheDocument();
     expect(api.submitConsultation).not.toHaveBeenCalled();
   });
+
+  it("opens a prefilled WhatsApp chat when Book on WhatsApp is clicked", async () => {
+    const openSpy = vi.spyOn(window, "open").mockImplementation(() => null);
+    render(<BookingForm serviceType="architectural" />);
+
+    fireEvent.change(screen.getByLabelText(/full name/i), { target: { value: "Ada Obi" } });
+    fireEvent.change(screen.getByLabelText(/message/i), { target: { value: "New build in Abuja." } });
+    fireEvent.click(screen.getByRole("button", { name: /book on whatsapp/i }));
+
+    await waitFor(() => expect(openSpy).toHaveBeenCalled());
+    const url = openSpy.mock.calls[0][0] as string;
+    expect(url).toContain("https://wa.me/2348186927183");
+    expect(decodeURIComponent(url)).toContain("Ada Obi");
+    openSpy.mockRestore();
+  });
 });
