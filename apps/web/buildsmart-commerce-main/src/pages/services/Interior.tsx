@@ -14,7 +14,6 @@ import int6 from "@/assets/brand/portfolio/interior/interior-6.jpeg";
 import int7 from "@/assets/brand/portfolio/interior/interior-7.jpeg";
 import int8 from "@/assets/brand/portfolio/interior/interior-8.jpeg";
 import int9 from "@/assets/brand/portfolio/interior/interior-9.jpeg";
-import int10 from "@/assets/brand/portfolio/interior/interior-10.jpeg";
 
 const services = [
   { t: "Space planning & styling", d: "Layouts that flow around how you actually live." },
@@ -24,7 +23,7 @@ const services = [
   { t: "Full project management", d: "We handle trades, timelines and installation." },
 ];
 
-const portfolioTiles = [int1, int2, int3, int4, int5, int6, int7, int8, int9, int10];
+const portfolioTiles = [int1, int2, int3, int4, int5, int6, int7, int8, int9];
 
 const Interior = () => (
   <div className="theme-dark bg-background text-foreground">
