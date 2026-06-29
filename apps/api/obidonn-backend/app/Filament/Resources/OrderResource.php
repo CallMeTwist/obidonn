@@ -70,6 +70,12 @@ class OrderResource extends Resource
                             'Cancelled' => 'danger',
                             default => 'gray',
                         }),
+                    Infolists\Components\TextEntry::make('payment_status_label')->label('Payment')->badge()
+                        ->color(fn (string $state): string => match ($state) {
+                            'Paid' => 'success', 'Unpaid' => 'warning', 'Expired' => 'gray', default => 'gray',
+                        }),
+                    Infolists\Components\TextEntry::make('expires_at')->label('Holds until')->dateTime()->placeholder('—'),
+                    Infolists\Components\TextEntry::make('paid_at')->label('Paid at')->dateTime()->placeholder('—'),
                     Infolists\Components\TextEntry::make('created_at')->label('Placed At')->dateTime(),
                 ]),
 
@@ -136,6 +142,17 @@ class OrderResource extends Resource
                     ->options(Order::$statuses)
                     ->sortable(),
 
+                Tables\Columns\TextColumn::make('payment_status')
+                    ->label('Payment')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => Order::$paymentStatuses[$state] ?? $state)
+                    ->color(fn (string $state): string => match ($state) {
+                        'paid' => 'success',
+                        'unpaid' => 'warning',
+                        'expired' => 'gray',
+                        default => 'gray',
+                    }),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Ordered')
                     ->dateTime()
@@ -144,13 +161,36 @@ class OrderResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->options(Order::$statuses),
+                Tables\Filters\SelectFilter::make('payment_status')
+                    ->label('Payment')
+                    ->options(Order::$paymentStatuses)
+                    ->placeholder('All (except expired)')
+                    ->query(function ($query, array $data) {
+                        if (blank($data['value'])) {
+                            return $query->where('payment_status', '!=', Order::PAYMENT_EXPIRED);
+                        }
+
+                        return $query->where('payment_status', $data['value']);
+                    }),
             ])
             ->actions([
+                Tables\Actions\Action::make('mark_paid')
+                    ->label('Mark as Paid')
+                    ->icon('heroicon-o-banknotes')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->visible(fn (Order $record): bool => $record->payment_status !== Order::PAYMENT_PAID)
+                    ->action(fn (Order $record) => $record->markAsPaid()),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\BulkAction::make('mark_paid')
+                        ->label('Mark as Paid')
+                        ->icon('heroicon-o-banknotes')
+                        ->color('success')
+                        ->action(fn ($records) => $records->each->markAsPaid()),
                     Tables\Actions\BulkAction::make('mark_confirmed')
                         ->label('Mark as Confirmed')
                         ->icon('heroicon-o-check')
