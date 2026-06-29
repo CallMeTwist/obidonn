@@ -8,8 +8,11 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\User;
+use App\Notifications\NewOrderNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
@@ -75,6 +78,8 @@ class OrderController extends Controller
                 'subtotal' => $subtotal,
                 'total' => $subtotal,
                 'status' => Order::STATUS_PENDING,
+                'payment_status' => Order::PAYMENT_UNPAID,
+                'expires_at' => now()->addDays(2),
             ]);
 
             foreach ($lines as &$l) {
@@ -84,6 +89,12 @@ class OrderController extends Controller
 
             return $order->load('items');
         });
+
+        try {
+            Notification::send(User::all(), new NewOrderNotification($order));
+        } catch (\Throwable $e) {
+            report($e);
+        }
 
         return response()->json([
             'message' => 'Order placed successfully.',
