@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin, Instagram } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { Hairline } from "@/components/brand/Hairline";
+import { BUSINESS } from "@/config/business";
 
 const Footer = () => (
   <footer className="theme-dark bg-background text-foreground">
@@ -34,9 +35,14 @@ const Footer = () => (
         <div>
           <h4 className="eyebrow mb-4 text-foreground">Contact</h4>
           <div className="flex flex-col gap-3 text-sm text-muted-foreground">
-            <span className="flex items-center gap-2"><Phone className="h-4 w-4 text-gold" /> +234 800 000 0000</span>
-            <span className="flex items-center gap-2"><Mail className="h-4 w-4 text-gold" /> hello@donns.com</span>
-            <span className="flex items-center gap-2"><MapPin className="h-4 w-4 text-gold" /> Lagos, Nigeria</span>
+            <span className="flex items-center gap-2"><Phone className="h-4 w-4 text-gold" /> {BUSINESS.phones[0]}</span>
+            <span className="flex items-center gap-2"><Mail className="h-4 w-4 text-gold" /> {BUSINESS.email}</span>
+            {BUSINESS.addresses.map((a) => (
+              <span key={a} className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold" /> {a}</span>
+            ))}
+            <a href={BUSINESS.socials.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 transition-colors hover:text-gold">
+              <Instagram className="h-4 w-4 text-gold" /> Instagram
+            </a>
           </div>
         </div>
       </div>
