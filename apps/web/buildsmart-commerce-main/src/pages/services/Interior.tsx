@@ -5,6 +5,16 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Hairline } from "@/components/brand/Hairline";
 import showcase from "@/assets/brand/pin2.jpg";
 import living from "@/assets/brand/interior-living.jpg";
+import int1 from "@/assets/brand/portfolio/interior/interior-1.jpeg";
+import int2 from "@/assets/brand/portfolio/interior/interior-2.jpeg";
+import int3 from "@/assets/brand/portfolio/interior/interior-3.jpeg";
+import int4 from "@/assets/brand/portfolio/interior/interior-4.jpeg";
+import int5 from "@/assets/brand/portfolio/interior/interior-5.jpeg";
+import int6 from "@/assets/brand/portfolio/interior/interior-6.jpeg";
+import int7 from "@/assets/brand/portfolio/interior/interior-7.jpeg";
+import int8 from "@/assets/brand/portfolio/interior/interior-8.jpeg";
+import int9 from "@/assets/brand/portfolio/interior/interior-9.jpeg";
+import int10 from "@/assets/brand/portfolio/interior/interior-10.jpeg";
 
 const services = [
   { t: "Space planning & styling", d: "Layouts that flow around how you actually live." },
@@ -13,6 +23,8 @@ const services = [
   { t: "Material, color & texture", d: "Curated palettes with a tactile, warm finish." },
   { t: "Full project management", d: "We handle trades, timelines and installation." },
 ];
+
+const portfolioTiles = [int1, int2, int3, int4, int5, int6, int7, int8, int9, int10];
 
 const Interior = () => (
   <div className="theme-dark bg-background text-foreground">
@@ -57,6 +69,22 @@ const Interior = () => (
       <div className="container relative z-10 mx-auto flex h-full flex-col justify-end px-4 pb-16">
         <p className="eyebrow text-gold-light">Featured project</p>
         <h3 className="mt-2 font-heading text-4xl md:text-5xl">The Ridge Residence</h3>
+      </div>
+    </section>
+
+    {/* Portfolio */}
+    <section id="portfolio" className="container mx-auto px-4 pb-24">
+      <SectionHeading eyebrow="Selected work" title="Interiors we've shaped" />
+      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {portfolioTiles.map((img, i) => (
+          <Reveal key={i} className="group overflow-hidden rounded-xl border border-border">
+            <img
+              src={img}
+              alt={`Interior project ${i + 1}`}
+              className="h-64 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          </Reveal>
+        ))}
       </div>
     </section>
 

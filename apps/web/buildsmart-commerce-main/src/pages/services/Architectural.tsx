@@ -7,6 +7,10 @@ import { Hairline } from "@/components/brand/Hairline";
 import archImage from "@/assets/brand/arch.jpeg";
 import pinImage from "@/assets/brand/pin.jpg";
 import sketchImage from "@/assets/brand/arch-sketch.jpg";
+import arch1 from "@/assets/brand/portfolio/arch/arch-1.jpeg";
+import arch2 from "@/assets/brand/portfolio/arch/arch-2.jpeg";
+import arch3 from "@/assets/brand/portfolio/arch/arch-3.jpeg";
+import arch4 from "@/assets/brand/portfolio/arch/arch-4.jpeg";
 
 const services = [
   "Site & feasibility analysis",
@@ -22,7 +26,7 @@ const steps = [
   { n: "03", t: "Construct", d: "Documentation, permits and on-site supervision." },
 ];
 
-const portfolioTiles = [archImage, pinImage, archImage, pinImage, archImage, pinImage];
+const portfolioTiles = [arch1, arch2, arch3, arch4];
 
 const Architectural = () => (
   <div className="theme-dark bg-background text-foreground">
@@ -104,7 +108,6 @@ const Architectural = () => (
           </Reveal>
         ))}
       </div>
-      {/* TODO(content): replace with real project imagery + titles */}
       <p className="mt-4 text-sm text-muted-foreground">A selection of recent work.</p>
     </section>
 
