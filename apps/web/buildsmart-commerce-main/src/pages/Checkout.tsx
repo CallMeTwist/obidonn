@@ -7,11 +7,13 @@ import { OrderFormData } from "@/types/product";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { CheckCircle } from "lucide-react";
+import { waLink } from "@/config/business";
 
 const Checkout = () => {
     const { items, subtotal, clearCart } = useCart();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [placed, setPlaced] = useState<string | null>(null);
     const [form, setForm] = useState<OrderFormData>({
         fullName: "",
         phone: "",
@@ -27,12 +29,18 @@ const Checkout = () => {
             // Pass both form data AND cart items — apiClient builds the payload
             const result = await submitOrder(form, items);
             if (result.success) {
+                const lines = items
+                    .map((it) => `• ${it.product.name}${it.variant ? ` (${it.variant.size})` : ""} ×${it.quantity} — ₦${(it.unitPrice * it.quantity).toLocaleString()}`)
+                    .join("\n");
+                const message =
+                    `Hello DONNS, I'd like to confirm my order *${result.orderId}*.\n\n` +
+                    `${lines}\n\n*Total:* ₦${subtotal.toLocaleString()}\n\n` +
+                    `Name: ${form.fullName}\nPhone: ${form.phone}\nAddress: ${form.address}` +
+                    (form.notes ? `\nNotes: ${form.notes}` : "") +
+                    `\n\nI'll send my payment receipt here.`;
+                window.open(waLink(message), "_blank", "noopener,noreferrer");
                 clearCart();
-                toast({
-                    title: "Order placed successfully!",
-                    description: `Order ID: ${result.orderId}`,
-                });
-                navigate("/");
+                setPlaced(result.orderId ?? null);
             }
         } catch (err: any) {
             // Laravel validation errors come back as err.response.data.errors
@@ -43,6 +51,30 @@ const Checkout = () => {
             setLoading(false);
         }
     };
+
+    if (placed) {
+        return (
+            <div className="container mx-auto max-w-xl px-4 py-16 text-center">
+                <CheckCircle className="mx-auto h-12 w-12 text-gold" />
+                <h1 className="mt-6 font-heading text-3xl font-semibold text-foreground">Order received</h1>
+                <p className="mt-3 text-muted-foreground">
+                    Your order <span className="font-semibold text-foreground">{placed}</span> is held for 2 days.
+                    Finish payment on WhatsApp and send your receipt there — we'll confirm it and your order is locked in.
+                </p>
+                <a
+                    href={waLink(`Hello DONNS, this is about my order ${placed}. I'm sending my payment receipt.`)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-8 inline-flex items-center justify-center gap-2 rounded-lg bg-green-500 px-6 py-3 font-semibold text-white transition-colors hover:bg-green-600"
+                >
+                    Open WhatsApp
+                </a>
+                <button onClick={() => navigate("/")} className="mt-4 block w-full text-sm text-muted-foreground hover:text-gold">
+                    Back to home
+                </button>
+            </div>
+        );
+    }
 
     if (items.length === 0) {
         navigate("/cart");
