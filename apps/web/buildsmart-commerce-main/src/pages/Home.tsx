@@ -57,7 +57,7 @@ const Home = () => {
       <section className="container mx-auto px-4 py-24 text-center">
         <SectionHeading eyebrow="Why DONNS" title="Design. Supply. Build." className="mx-auto max-w-2xl" />
         <div className="mx-auto mt-14 grid max-w-3xl grid-cols-3 gap-8">
-          <StatCounter value={18} suffix="+" label="Years" />
+          <StatCounter value={30} suffix="+" label="Years" />
           <StatCounter value={240} label="Projects" />
           <StatCounter value={5000} suffix="+" label="Products" />
         </div>

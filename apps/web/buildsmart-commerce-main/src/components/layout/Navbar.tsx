@@ -41,6 +41,7 @@ const Navbar = () => {
   useEffect(() => {
     setMobileOpen(false);
     setServicesOpen(false);
+    setMobileServicesOpen(false);
   }, [location.pathname]);
 
   // Cleanup hover-delay timer on unmount to prevent timer leak
@@ -136,7 +137,10 @@ const Navbar = () => {
             )}
           </Link>
           <button
-            onClick={() => setMobileOpen(!mobileOpen)}
+            onClick={() => {
+              setMobileOpen((v) => !v);
+              setMobileServicesOpen(false);
+            }}
             aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
             aria-expanded={mobileOpen}
             className="p-2 text-foreground md:hidden"
@@ -147,14 +151,43 @@ const Navbar = () => {
       </div>
 
       {mobileOpen && (
-        <div className="theme-dark border-t border-border bg-background px-4 pb-4 text-foreground md:hidden">
+        <div className="theme-dark border-t border-border bg-background px-4 pb-6 text-foreground md:hidden">
           {[primary[0], primary[1]].map((l) => (
             <MobileLink key={l.to} {...l} onClose={() => setMobileOpen(false)} />
           ))}
-          <p className="px-1 pt-4 eyebrow text-muted-foreground">Services</p>
-          {services.map((s) => (
-            <MobileLink key={s.to} {...s} indent onClose={() => setMobileOpen(false)} />
-          ))}
+
+          <button
+            type="button"
+            aria-expanded={mobileServicesOpen}
+            aria-controls="mobile-services"
+            onClick={() => setMobileServicesOpen((v) => !v)}
+            className="flex w-full items-center justify-between py-3 transition-colors hover:text-gold"
+          >
+            <span className="eyebrow text-muted-foreground">Services</span>
+            <ChevronDown
+              className={cn(
+                "h-4 w-4 text-muted-foreground transition-transform duration-300 ease-out",
+                mobileServicesOpen && "rotate-180 text-gold",
+              )}
+            />
+          </button>
+
+          <div
+            id="mobile-services"
+            className={cn(
+              "grid transition-all duration-300 ease-out",
+              mobileServicesOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+            )}
+          >
+            <div className="overflow-hidden">
+              <div className="ml-1 border-l border-border/60 pl-3">
+                {services.map((s) => (
+                  <MobileLink key={s.to} {...s} onClose={() => setMobileOpen(false)} />
+                ))}
+              </div>
+            </div>
+          </div>
+
           {[primary[2], primary[3]].map((l) => (
             <MobileLink key={l.to} {...l} onClose={() => setMobileOpen(false)} />
           ))}
@@ -178,12 +211,12 @@ function NavItem({ to, label, active }: { to: string; label: string; active: boo
   );
 }
 
-function MobileLink({ to, label, indent, onClose }: { to: string; label: string; indent?: boolean; onClose: () => void }) {
+function MobileLink({ to, label, onClose }: { to: string; label: string; onClose: () => void }) {
   return (
     <Link
       to={to}
       onClick={onClose}
-      className={cn("block py-3 text-sm font-medium text-foreground/85 hover:text-gold", indent && "pl-4")}
+      className="block py-3 text-sm font-medium text-foreground/85 hover:text-gold"
     >
       {label}
     </Link>
