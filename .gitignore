@@ -21,7 +21,12 @@ apps/api/obidonn-backend/storage/framework/sessions/
 apps/api/obidonn-backend/storage/framework/views/
 apps/api/obidonn-backend/bootstrap/cache/
 
-# brainstorm companion + os
+# local tooling, agent config & planning notes
 .superpowers/
+.claude/
+**/.claude/
+CLAUDE.md
+**/CLAUDE.md
+docs/superpowers/
 .DS_Store
 Thumbs.db
