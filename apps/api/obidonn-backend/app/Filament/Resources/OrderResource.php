@@ -8,6 +8,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -180,7 +181,17 @@ class OrderResource extends Resource
                     ->color('success')
                     ->requiresConfirmation()
                     ->visible(fn (Order $record): bool => $record->payment_status !== Order::PAYMENT_PAID)
-                    ->action(fn (Order $record) => $record->markAsPaid()),
+                    ->action(function (Order $record): void {
+                        try {
+                            $record->markAsPaid();
+                        } catch (\RuntimeException $e) {
+                            Notification::make()
+                                ->title('Could not mark as paid')
+                                ->body($e->getMessage())
+                                ->danger()
+                                ->send();
+                        }
+                    }),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
@@ -190,7 +201,23 @@ class OrderResource extends Resource
                         ->label('Mark as Paid')
                         ->icon('heroicon-o-banknotes')
                         ->color('success')
-                        ->action(fn ($records) => $records->each->markAsPaid()),
+                        ->action(function ($records): void {
+                            $failed = [];
+                            foreach ($records as $record) {
+                                try {
+                                    $record->markAsPaid();
+                                } catch (\RuntimeException $e) {
+                                    $failed[] = $record->order_number;
+                                }
+                            }
+                            if (! empty($failed)) {
+                                Notification::make()
+                                    ->title('Some orders could not be marked as paid')
+                                    ->body('Insufficient stock to reinstate: '.implode(', ', $failed))
+                                    ->danger()
+                                    ->send();
+                            }
+                        }),
                     Tables\Actions\BulkAction::make('mark_confirmed')
                         ->label('Mark as Confirmed')
                         ->icon('heroicon-o-check')

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class Order extends Model
@@ -91,13 +92,19 @@ class Order extends Model
 
     public function markAsPaid(): void
     {
-        $this->payment_status = self::PAYMENT_PAID;
-        $this->paid_at = now();
-        $this->expires_at = null;
-        if ($this->status === self::STATUS_PENDING) {
-            $this->status = self::STATUS_CONFIRMED;
-        }
-        $this->save();
+        DB::transaction(function (): void {
+            if ($this->payment_status === self::PAYMENT_EXPIRED) {
+                $this->deductStock();
+            }
+
+            $this->payment_status = self::PAYMENT_PAID;
+            $this->paid_at = now();
+            $this->expires_at = null;
+            if ($this->status === self::STATUS_PENDING) {
+                $this->status = self::STATUS_CONFIRMED;
+            }
+            $this->save();
+        });
     }
 
     public function restoreStock(): void
@@ -107,6 +114,26 @@ class Order extends Model
                 ProductVariant::query()->where('id', $item->variant_id)->increment('stock', $item->quantity);
             } else {
                 Product::query()->where('id', $item->product_id)->increment('stock', $item->quantity);
+            }
+        }
+    }
+
+    /**
+     * Re-deduct stock for an order whose stock was previously restored (e.g. an
+     * expired order being reinstated as paid). Decrements atomically and refuses
+     * to oversell — a zero-row update means stock can no longer cover the line.
+     */
+    public function deductStock(): void
+    {
+        $this->loadMissing('items');
+
+        foreach ($this->items as $item) {
+            $affected = $item->variant_id
+                ? ProductVariant::query()->where('id', $item->variant_id)->where('stock', '>=', $item->quantity)->decrement('stock', $item->quantity)
+                : Product::query()->where('id', $item->product_id)->where('stock', '>=', $item->quantity)->decrement('stock', $item->quantity);
+
+            if ($affected === 0) {
+                throw new \RuntimeException("Insufficient stock to reinstate order {$this->order_number}.");
             }
         }
     }
