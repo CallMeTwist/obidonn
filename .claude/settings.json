@@ -60,7 +60,30 @@
       "Bash(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 decor-living.jpg)",
       "Bash(ffmpeg -y -loglevel error -i decor-living.jpg -q:v 5 decor-living-opt.jpg)",
       "Bash(ffmpeg -y -loglevel error -i decor-living.jpg -vf \"scale=2000:-1\" -q:v 4 decor-living-opt.jpg)",
-      "Bash(mv -f decor-living-opt.jpg decor-living.jpg)"
+      "Bash(mv -f decor-living-opt.jpg decor-living.jpg)",
+      "Bash(cd \"c:/Users/ADMIN/Documents/OBIDONN\" && mkdir -p docs/superpowers/specs && echo created)",
+      "Bash(cat \"$\\(git rev-parse --show-toplevel\\)/.superpowers/sdd/progress.md\")",
+      "Bash(ls \"C:/Users/ADMIN/.claude/plugins/cache/claude-plugins-official/superpowers/6.0.3/skills/subagent-driven-development/scripts\")",
+      "Read(//c/Users/ADMIN/.claude/plugins/cache/claude-plugins-official/superpowers/6.0.3/skills/subagent-driven-development/scripts/**)",
+      "Bash(./task-brief \"c:/Users/ADMIN/Documents/OBIDONN/docs/superpowers/plans/2026-06-28-whatsapp-commerce-consultations-portfolios.md\" 1)",
+      "Read(//c/Users/ADMIN/.claude/plugins/cache/claude-plugins-official/superpowers/6.0.3/skills/subagent-driven-development/**)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(awk '{print $1}')",
+      "Bash(cat .superpowers/sdd/progress.md)",
+      "Bash(grep -l \"HasFactory\" apps/api/obidonn-backend/app/Models/Product.php apps/api/obidonn-backend/app/Models/Category.php apps/api/obidonn-backend/app/Models/ProductVariant.php)",
+      "Bash(grep -n \"stock\\\\|has_variants\" database/migrations/*create_products_table.php)",
+      "Bash(grep -n \"stock\" database/migrations/*variant*.php)",
+      "Bash(php -l app/Filament/Resources/OrderResource.php)",
+      "Bash(cd \"c:/Users/ADMIN/Documents/OBIDONN\" && sed -i 's/- Task 13: pending/- Task 13: complete \\(commits e277645..2a8769a, review PASS\\)/' .superpowers/sdd/progress.md && echo \"ledger updated\")",
+      "Bash(vendor/bin/pint --test --format agent)",
+      "Bash(echo \"TSC EXIT: $?\")",
+      "Bash(curl -s -o /dev/null -w \"products: %{http_code}\\\\n\" http://127.0.0.1:8000/api/products)",
+      "Bash(curl -s -o /dev/null -w \"frontend: %{http_code}\\\\n\" http://localhost:8080/)",
+      "Bash(git commit -m ' *)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\ADMIN\\Documents\\OBIDONN\\docs\\superpowers\\specs",
+      "c:\\Users\\ADMIN\\Documents\\OBIDONN\\.superpowers\\sdd"
     ]
   }
 }
